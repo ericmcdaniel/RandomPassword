@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.InputMismatchException;
+import java.util.Random;
+
 public class RandomPassword
 {
     // Constant variables
@@ -53,7 +60,7 @@ public class RandomPassword
             {
                 pwSize = Integer.parseInt(argsArrayList.get(sizeIndex + 1));
                 if (pwSize < 1)
-                    throw new java.util.InputMismatchException();
+                    throw new InputMismatchException();
             }
             catch (NumberFormatException ex)
             {
@@ -138,7 +145,7 @@ public class RandomPassword
         int number = -1;
         while (notValid)
         {
-            number = (new java.util.Random().nextInt(74) + 48);
+            number = new Random().nextInt(74) + 48;
             if (!(number >= 58 && number <= 65) && !(number >= 91 && number <= 96))
                 notValid = false;
         }
@@ -153,7 +160,7 @@ public class RandomPassword
         {
             for (int i = 0; i < pwObj.getPWSize(); ++i)
             {
-                int number = new java.util.Random().nextInt(10);
+                int number = new Random().nextInt(10);
                 completedPassword += number;
             }
             return completedPassword;
@@ -194,7 +201,7 @@ public class RandomPassword
         Scanner fileReadingObj = null;
         try
         {
-            java.io.FileReader fileObj = new java.io.FileReader(PW_DATABASE_FILE);
+            FileReader fileObj = new FileReader(PW_DATABASE_FILE);
             fileReadingObj = new Scanner(fileObj);
             String fullDatabase = "";
             if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL))
@@ -230,7 +237,7 @@ public class RandomPassword
             
             
         }
-        catch (java.io.FileNotFoundException ex)
+        catch (FileNotFoundException ex)
         {
             System.out.println("Error loading password database. This may be\n"
             + "due to either a permission error or this is the first time the\n"
@@ -252,7 +259,7 @@ public class RandomPassword
             + printDirections());
         else
         {
-            java.io.PrintWriter outWriter = null;
+            PrintWriter outWriter = null;
             try
             {
                 RandomPassword pwObj = new RandomPassword(args);
@@ -264,7 +271,7 @@ public class RandomPassword
                 }
 
                 // Instantiate io objects
-                outWriter = new java.io.PrintWriter(new java.io.FileWriter(PW_DATABASE_FILE, true));
+                outWriter = new PrintWriter(new java.io.FileWriter(PW_DATABASE_FILE, true));
                 String completedPassword = generatePW(pwObj);
 
 
@@ -282,12 +289,12 @@ public class RandomPassword
                 System.out.println("\t" + completedPassword);
                 outWriter.println(formattedDateToFile + " " + completedPassword);
             }
-            catch (java.util.InputMismatchException ex)
+            catch (InputMismatchException ex)
             {
                 System.out.println("Cannot recognize input as an integer. Restart program.\n"
                 + "\tAdd \"-h\" as an argument for directions.");
             } 
-            catch (java.io.IOException ex)
+            catch (IOException ex)
             {
                 System.out.println("Error reading or writing to file. Program terminated.");
             }
