@@ -15,14 +15,15 @@ public class RandomPassword
     private static final String  FLAG_PRINT_LAST  = "-p";
     private static final String   FLAG_PRINT_ALL  = "-a";
     private static final String  FLAG_PRINT_FILE  = "-f";
+    private static final String  FLAG_DELETE_ALL  = "-D";
     private static final String     FLAG_PW_SIZE  = "-s";
     private static final String        FLAG_HELP  = "-h";
     private static final    int  DEFAULT_PW_SIZE  = 8;
     private static final String PW_DATABASE_FILE  = ".pwcollection.txt";
 
     // Instance variables of password generating object
-    private           boolean onlyNumeric;
-    private               int pwSize       = -1;
+    private           boolean   onlyNumeric;
+    private               int        pwSize = -1;
     private ArrayList<String> argsArrayList;
 
     public RandomPassword(String[] cmdArgs)
@@ -32,12 +33,35 @@ public class RandomPassword
         for (int i = 0; i < cmdArgs.length; ++i)
             argsArrayList.add(cmdArgs[i]);
 
-        // Ignore all flags, just print the info guide
+        // Disregarding all other flags, just print the info guide
         if (argsArrayList.contains(FLAG_HELP))
         {
             System.out.println(printDirections());
             System.exit(0);
-        }
+        } // End print -h
+
+        // Disregarding all other flags, clear the database
+        if (argsArrayList.contains(FLAG_DELETE_ALL))
+        {
+            if (deleteDatabasePrompt())
+            {
+                try
+                {
+                    PrintWriter overwriteFile = new PrintWriter(new java.io.FileWriter(PW_DATABASE_FILE));
+                    overwriteFile.println();
+                    System.out.println("Database successfully cleared");
+                }
+                catch (IOException ex)
+                {
+                    System.out.println("Database delete operation was unsuccessful.\n"
+                    + "Likely no file to begin with.");
+                } // End try-catch
+            } // End if user prompts successfully
+            else
+                System.out.println("Database delete operation was unsuccessful.\n"
+                + "Incorrect confirmation code provided.");
+            System.exit(0);
+        } // End delete database -D
 
         // Helper method for handling general improper arguments
         if (!parsableArguments(argsArrayList))
@@ -124,6 +148,28 @@ public class RandomPassword
         return true;
     }
 
+    private boolean deleteDatabasePrompt()
+    {
+        int randConfirmation = new Random().nextInt(89999) + 1001;
+        System.out.println("\n\n\t || WARNING! ||\n\nYou have optioned to delete the entire database!\n"
+        + "Please enter the code provided to confirm your selection."
+        + "\n\n\tConfirmation Code: " + randConfirmation + "\n");
+        System.out.print("Enter the confirmation Code: ");
+        String confirmedInput = new Scanner(System.in).next();
+        try
+        {
+            int parsedConfirmInput = Integer.parseInt(confirmedInput);
+            if (parsedConfirmInput == randConfirmation)
+                return true;
+            return false; 
+        }
+        catch (NumberFormatException ex)
+        {
+            System.out.println("Could not confirm request.");
+        }
+        return false;
+    }
+
     private void setAsOnlyNumeric(boolean value)
     {
         onlyNumeric = value;
@@ -192,17 +238,18 @@ public class RandomPassword
             + "Optional:\n"
             + "  " + FLAG_PW_SIZE + " <VALUE>\tCustomize the password's length. The default\n"
             + "\t\tsize of " + DEFAULT_PW_SIZE + " numbers and/or characters will\n"
-            + "\t\totherwise be used.\n\n"
+            + "\t\totherwise be used.\n"
+            + "  " + FLAG_DELETE_ALL + "\t\tClear entire database\n\n"
             + "  " + FLAG_HELP + "\t\tPrint this help dialog.\n\n";
-    }
+    } // End String printDirections()
 
     public static String printPasswords(RandomPassword pwObj)
     {
         Scanner fileReadingObj = null;
         try
         {
-            FileReader fileObj = new FileReader(PW_DATABASE_FILE);
-            fileReadingObj = new Scanner(fileObj);
+            // FileReader fileObj = new FileReader(PW_DATABASE_FILE);
+            fileReadingObj = new Scanner(new FileReader(PW_DATABASE_FILE));
             String fullDatabase = "";
             if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL))
             {
@@ -215,7 +262,7 @@ public class RandomPassword
                     + fileReadingObj.next() + "\n\n";
                 }
                 return fullDatabase;
-            }
+            } // End if contains -a
             if (pwObj.argsArrayList.contains(FLAG_PRINT_LAST))
             {
                 String finalLine = "";
@@ -233,15 +280,13 @@ public class RandomPassword
                     + token.next() + "\n\n";
                 }
                 return fullDatabase;
-            }
-            
-            
-        }
+            } // End if contains -p       
+        } // End try block
         catch (FileNotFoundException ex)
         {
             System.out.println("Error loading password database. This may be\n"
             + "due to either a permission error or this is the first time the\n"
-            + "program has been executed. Generate a new password to troubleshoot.\n");
+            + "program has been executed.\n\n\tGenerate a new password to troubleshoot.\n");
             System.exit(0);
         }
         finally 
@@ -249,8 +294,8 @@ public class RandomPassword
             if (fileReadingObj != null)
                 fileReadingObj.close();
         }
-        return "";
-    }
+        return null; // Should never encounter 
+    } // End String printPasswords()
 
     public static void main(String[] args)
     {
