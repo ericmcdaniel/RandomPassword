@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class RandomPassword
     private static final String        FLAG_HELP  = "-h";
     private static final    int  DEFAULT_PW_SIZE  = 8;
     private static final String PW_DATABASE_FILE  = ".pwcollection.txt";
+    private static final String    PW_PRINT_FILE  = "SavedPasswords.txt";
 
     // Instance variables of password generating object
     private           boolean   onlyNumeric;
@@ -28,6 +30,22 @@ public class RandomPassword
 
     public RandomPassword(String[] cmdArgs)
     {
+        try
+        {
+            FileReader existingFile = new FileReader(PW_DATABASE_FILE);
+        }
+        catch (FileNotFoundException ex)
+        {
+            try
+            {
+                PrintWriter filecreator = new PrintWriter(new FileWriter(PW_DATABASE_FILE));
+                filecreator.println();
+            }
+            catch (IOException ioex)
+            {
+                System.err.println("Database could not be created. Possible permission error.");
+            }
+        }
         // Transfer command-line arguments for easy ArrayList functions
         argsArrayList = new ArrayList<String>();
         for (int i = 0; i < cmdArgs.length; ++i)
@@ -49,27 +67,28 @@ public class RandomPassword
                 {
                     PrintWriter overwriteFile = new PrintWriter(new java.io.FileWriter(PW_DATABASE_FILE));
                     overwriteFile.println();
-                    System.out.println("Database successfully cleared");
+                    System.out.println("\nDatabase successfully cleared.");
+                    System.exit(0);
                 }
                 catch (IOException ex)
                 {
-                    System.out.println("Database delete operation was unsuccessful.\n"
-                    + "Likely no file to begin with.");
+                    System.err.println("\nDatabase delete operation was unsuccessful.\n"
+                    + "There possibly was no file to begin with.");
                 } // End try-catch
             } // End if user prompts successfully
             else
-                System.out.println("Database delete operation was unsuccessful.\n"
+                System.err.println("\nDatabase delete operation was unsuccessful.\n"
                 + "Incorrect confirmation code provided.");
-            System.exit(0);
+            System.exit(1);
         } // End delete database -D
 
         // Helper method for handling general improper arguments
         if (!parsableArguments(argsArrayList))
         {
-            System.out.println("\nCould not parse arguments. Restart program.\n"
+            System.err.println("\nCould not parse argument(s). Restart the program.\n"
             + "\tAdd \"-h\" as an argument for directions.");
-            System.exit(0);
-        }
+            System.exit(1);
+        } // end !parsableArguments()
 
         if (argsArrayList.contains(FLAG_ALPHA_PW))
             onlyNumeric = false;
@@ -84,37 +103,42 @@ public class RandomPassword
             {
                 pwSize = Integer.parseInt(argsArrayList.get(sizeIndex + 1));
                 if (pwSize < 1)
-                    throw new InputMismatchException();
+                    throw new IndexOutOfBoundsException();
             }
             catch (NumberFormatException ex)
             {
-                System.out.println("\nCould not properly parse size argument. Restart program.\n"
+                System.err.println("\n\nCould not properly parse size argument. Restart program.\n"
                 + "\tAdd \"-h\" as an argument for directions.");
-                System.exit(0);
+                System.exit(1);
             }
             catch (IndexOutOfBoundsException ex)
             {
-                System.out.println("\nCould not properly parse size argument. Restart program.\n"
+                System.err.println("\n\nCould not properly parse size argument. Restart program.\n"
                 + "\tProvide \"-h\" as an argument for directions.");
-                System.exit(0);
+                System.exit(1);
             } // End Try-Catch
         } // End list-contains Size
     } // Constructor
 
     private boolean parsableArguments(ArrayList<String> argsArrayList)
-    {        
+    {
         if (argsArrayList.contains(FLAG_ALPHA_PW) &&
             argsArrayList.contains(FLAG_NUM_ONLY_PW))
             return false;
 
-        if ((!argsArrayList.contains(FLAG_ALPHA_PW) &&
-             !argsArrayList.contains(FLAG_NUM_ONLY_PW)) &&
-            !(argsArrayList.contains(FLAG_PRINT_LAST) ||
-              argsArrayList.contains(FLAG_PRINT_ALL)))
-              return false;
+        if ((argsArrayList.contains(FLAG_ALPHA_PW) ||
+             argsArrayList.contains(FLAG_NUM_ONLY_PW)) &&
+            (argsArrayList.contains(FLAG_PRINT_LAST) ||
+             argsArrayList.contains(FLAG_PRINT_ALL)))
+             return false;
 
         if (argsArrayList.contains(FLAG_PRINT_LAST) &&
             argsArrayList.contains(FLAG_PRINT_ALL))
+            return false;
+
+        if (argsArrayList.contains(FLAG_PW_SIZE) &&
+          !(argsArrayList.contains(FLAG_ALPHA_PW) ||
+            argsArrayList.contains(FLAG_NUM_ONLY_PW)))
             return false;
 
         for (String args : argsArrayList)
@@ -139,9 +163,9 @@ public class RandomPassword
                 }
                 catch (NumberFormatException ex)
                 {
-                    System.out.println("\nCould not properly parse size argument. Restart program.\n"
+                    System.err.println("\nCould not properly parse size argument. Restart program.\n"
                     + "\tProvide \"-h\" as an argument for directions.");
-                    System.exit(0);
+                    System.exit(1);
                 } // End Try-Catch
             } // End charAt(0) != -
         } // End for ArrayList loop
@@ -150,22 +174,25 @@ public class RandomPassword
 
     private boolean deleteDatabasePrompt()
     {
+        // User opts to delete their password history. Make them enter a confirmation number
         int randConfirmation = new Random().nextInt(89999) + 1001;
-        System.out.println("\n\n\t || WARNING! ||\n\nYou have optioned to delete the entire database!\n"
+
+        System.out.print("\n\n\t || WARNING! ||\n\nYou have optioned to delete the entire database!\n"
         + "Please enter the code provided to confirm your selection."
-        + "\n\n\tConfirmation Code: " + randConfirmation + "\n");
-        System.out.print("Enter the confirmation Code: ");
+        + "\n\n\tConfirmation Code: " + randConfirmation + "\n"
+        + "Enter the confirmation Code: ");
         String confirmedInput = new Scanner(System.in).next();
+
         try
         {
             int parsedConfirmInput = Integer.parseInt(confirmedInput);
             if (parsedConfirmInput == randConfirmation)
                 return true;
-            return false; 
+            return false;
         }
         catch (NumberFormatException ex)
         {
-            System.out.println("Could not confirm request.");
+            System.err.println("\nCould not confirm request.\nInvalid input.");
         }
         return false;
     }
@@ -185,6 +212,7 @@ public class RandomPassword
         return pwSize;
     }
 
+    /* The real logic of the program. */
     private static int getRandomChar()
     {
         boolean notValid = true;
@@ -248,10 +276,15 @@ public class RandomPassword
         Scanner fileReadingObj = null;
         try
         {
-            // FileReader fileObj = new FileReader(PW_DATABASE_FILE);
             fileReadingObj = new Scanner(new FileReader(PW_DATABASE_FILE));
+            if (!fileReadingObj.hasNext())
+            {
+                System.err.println("No password records were found in the database.");
+                System.exit(1);
+            }
+            
             String fullDatabase = "";
-            if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL))
+            if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL) || pwObj.argsArrayList.contains(FLAG_PRINT_FILE))
             {
                 while (fileReadingObj.hasNext())
                 {
@@ -280,74 +313,87 @@ public class RandomPassword
                     + token.next() + "\n\n";
                 }
                 return fullDatabase;
-            } // End if contains -p       
+            } // End if contains -p
         } // End try block
         catch (FileNotFoundException ex)
         {
-            System.out.println("Error loading password database. This may be\n"
-            + "due to either a permission error or this is the first time the\n"
-            + "program has been executed.\n\n\tGenerate a new password to troubleshoot.\n");
-            System.exit(0);
+            System.err.println("Error loading password database.\nThis likely was the result "
+            + "of a file permission error.\n\n\tGenerate a new password to troubleshoot.\n");
+            System.exit(1);
         }
-        finally 
+        finally
         {
             if (fileReadingObj != null)
                 fileReadingObj.close();
         }
-        return null; // Should never encounter 
+        return null; // Should never encounter
     } // End String printPasswords()
 
     public static void main(String[] args)
     {
         if (args.length < 1)
-            System.out.println("Improper command line argument(s) provided.\n\n"
-            + printDirections());
-        else
         {
-            PrintWriter outWriter = null;
-            try
+            System.err.println("Improper command line argument(s) provided.\n\n"
+            + printDirections());
+            System.exit(1);
+        }
+        PrintWriter outWriter = null;
+        PrintWriter printFile = null;
+        try
+        {
+            RandomPassword pwObj = new RandomPassword(args);
+
+            if (pwObj.argsArrayList.contains(FLAG_PRINT_FILE))
             {
-                RandomPassword pwObj = new RandomPassword(args);
-                if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL) ||
-                    pwObj.argsArrayList.contains(FLAG_PRINT_LAST))
-                {
-                    System.out.print(printPasswords(pwObj));
-                    System.exit(0);
-                }
-
-                // Instantiate io objects
-                outWriter = new PrintWriter(new java.io.FileWriter(PW_DATABASE_FILE, true));
-                String completedPassword = generatePW(pwObj);
-
-
-                // Use Date and DateFormat objects to make formatted timestamps 
-                java.util.Date date = new java.util.Date();
-                String strDateFormatToScreen = "MM/dd/yy, hh:mm:ss a";
-                java.text.DateFormat dateFormatToScreen = new java.text.SimpleDateFormat(strDateFormatToScreen);
-                String formattedDateToScreen = dateFormatToScreen.format(date);
-                String strDateFormatToFile = "MM dd yy hh mm ss a";
-                java.text.DateFormat dateFormatToFile = new java.text.SimpleDateFormat(strDateFormatToFile);
-                String formattedDateToFile = dateFormatToFile.format(date);
-
-                // Print to the screen with formatted time, append to the database file
-                System.out.println("[Password generated on " + formattedDateToScreen + "]");
-                System.out.println("\t" + completedPassword);
-                outWriter.println(formattedDateToFile + " " + completedPassword);
+                printFile = new PrintWriter(new FileWriter(PW_PRINT_FILE));
+                printFile.print(printPasswords(pwObj));
+                System.out.println("Passwords have successfully been printed on to:\n"
+                + "\t\"SavedPasswords.txt\"");
+                printFile.close();
+                System.exit(0);
             }
-            catch (InputMismatchException ex)
+
+            if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL) ||
+                pwObj.argsArrayList.contains(FLAG_PRINT_LAST))
             {
-                System.out.println("Cannot recognize input as an integer. Restart program.\n"
-                + "\tAdd \"-h\" as an argument for directions.");
-            } 
-            catch (IOException ex)
-            {
-                System.out.println("Error reading or writing to file. Program terminated.");
+                System.out.print(printPasswords(pwObj));
+                System.exit(0);
             }
-            finally
-            {
-                if (outWriter != null)
-                    outWriter.close();
-            }
-        } // End if-args.length
+
+            // Instantiate io objects
+            outWriter = new PrintWriter(new FileWriter(PW_DATABASE_FILE, true));
+            String completedPassword = generatePW(pwObj);
+
+
+            // Use Date and DateFormat objects to make formatted timestamps
+            java.util.Date date = new java.util.Date();
+            String strDateFormatToScreen = "MM/dd/yy, hh:mm:ss a";
+            java.text.DateFormat dateFormatToScreen = new java.text.SimpleDateFormat(strDateFormatToScreen);
+            String formattedDateToScreen = dateFormatToScreen.format(date);
+            String strDateFormatToFile = "MM dd yy hh mm ss a";
+            java.text.DateFormat dateFormatToFile = new java.text.SimpleDateFormat(strDateFormatToFile);
+            String formattedDateToFile = dateFormatToFile.format(date);
+
+            // Print to the screen with formatted time, append to the database file
+            System.out.println("[Password generated on " + formattedDateToScreen + "]");
+            System.out.println("\t" + completedPassword);
+            outWriter.println(formattedDateToFile + " " + completedPassword);
+        }
+        catch (InputMismatchException ex)
+        {
+            System.err.println("Cannot recognize input as an integer. Restart program.\n"
+            + "\tAdd \"-h\" as an argument for directions.");
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error reading or writing to file. Program terminated.");
+        }
+        finally
+        {
+            if (outWriter != null)
+                outWriter.close();
+            if (printFile != null)
+                printFile.close();
+        } // End try-catch block
     } // End main()
 } // End class RandomPassword
