@@ -28,30 +28,32 @@ This program was primarily intended for Linux users, and was not tested in a Win
 + Being a Java application, users will need to install Oracle's Java Development Kit (JDK). <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">The JDK can be downloaded here.</a>
 + For those unfamiliar with GitHub, click the green "Clone or download" button, download the repository as a ZIP, and extract it on your local machine. Cloning/ Forking/ or downloading via SSH will work just as fine too for users with previous GitHub experience.
 + Compile the source code using the `javac` command. You must be in the directory containing the source code.
-
-    javac RandomPassword.java
+```
+javac RandomPassword.java
+```
 
 #### Run the Application
 + Run the program using the `java` keyword, followed by the name of the program (without the <i>.java</i> suffix).
-
-    java RandomPassword
+```
+java RandomPassword
+```
 
 By default, the help menu will appear if no arguments were provided.
 
 Required Flags:
-+ `-c`		A random password will get generated which contains a mixture of characters and numbers.
-+ `-n`		A random password will get generated which contains numbers only.
++ `-c` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A random password will get generated which contains a mixture of characters and numbers.
++ `-n` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A random password will get generated which contains numbers only.
 
  -or-
 
-+ `-p`		Print the most recent password to the console window.
-+ `-a`		Print ALL of the stored timestamped passwords.
-+ `-f`		Redirect ALL timestamped passwords to a separate textfile named "SavedPasswords.txt"
++ `-p` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Print the most recent password to the console window.
++ `-a` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Print ALL of the stored timestamped passwords.
++ `-f` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Redirect ALL timestamped passwords to a separate textfile named "SavedPasswords.txt"
 
 Optional Flags:
-+ `-s` <VALUE>	Customize the password's length. The default size of 8 numbers and/or characters will otherwise be used.
-+ `-D`		Clear entire database entries. You will have to enter a confirmation number.
-+ `-h`		Print this help dialog again.
++ `-s` \<VALUE\> Customize the password's length. The default size of 8 numbers and/or characters will otherwise be used.
++ `-D` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Clear entire database entries. You will have to enter a confirmation number.
++ `-h` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Print this help dialog again.
 
 #### Contact the Author
 Should you find an error in the program or would like to contact me for suggestion/ improvements, you can use GitHub's `@McDanielES` mention system to contact me. I will try to respond as soon as I am available.
