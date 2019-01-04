@@ -282,13 +282,13 @@ public class RandomPassword
                 System.err.println("No password records were found in the database.");
                 System.exit(1);
             }
-            
+
             String fullDatabase = "";
             if (pwObj.argsArrayList.contains(FLAG_PRINT_ALL) || pwObj.argsArrayList.contains(FLAG_PRINT_FILE))
             {
                 while (fileReadingObj.hasNext())
                 {
-                    fullDatabase += "[Password generated on " + fileReadingObj.next()
+                    fullDatabase += "[Password previously generated on " + fileReadingObj.next()
                     + "/" + fileReadingObj.next() + "/" + fileReadingObj.next() + ", at "
                     + fileReadingObj.next() + ":" + fileReadingObj.next() + ":"
                     + fileReadingObj.next() + " " + fileReadingObj.next() + "]\n\t"
@@ -375,7 +375,7 @@ public class RandomPassword
             String formattedDateToFile = dateFormatToFile.format(date);
 
             // Print to the screen with formatted time, append to the database file
-            System.out.println("[Password generated on " + formattedDateToScreen + "]");
+            System.out.println("[New Password - generated on " + formattedDateToScreen + "]");
             System.out.println("\t" + completedPassword);
             outWriter.println(formattedDateToFile + " " + completedPassword);
         }
