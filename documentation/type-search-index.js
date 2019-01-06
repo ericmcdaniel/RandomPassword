@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"<Unnamed>","l":"PasswordGen"},{"p":"<Unnamed>","l":"RandomPassword"}]
