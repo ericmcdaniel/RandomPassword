@@ -2,6 +2,14 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.InputMismatchException;
+/**
+ * <p>This is the main class of the Random Password generator. This program was written
+ * to help combat procrastination by providing a random password to temporarily change
+ * the password of a social media account.</a>
+ *
+ * @author Eric McDaniel
+ * @version 1.3
+ */
 public class RandomPassword
 {
     // Constant variables
