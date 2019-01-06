@@ -5,14 +5,14 @@ import java.util.InputMismatchException;
 /**
  * <p>This is the main class of the Random Password generator. This program was written
  * to help combat procrastination by providing a random password to temporarily change
- * the password of a social media account.</a>
+ * the password of a social media account.</p>
  *
  * @author Eric McDaniel
  * @version 1.3
  */
 public class RandomPassword
 {
-    // Constant variables
+    // Constant static variables
     public static final String    FLAG_ALPHA_PW  = "-c";
     public static final String FLAG_NUM_ONLY_PW  = "-n";
     public static final String  FLAG_PRINT_LAST  = "-p";
@@ -34,39 +34,44 @@ public class RandomPassword
             + "\t\tnumeric only, are customizable in length, and\n"
             + "\t\twill be stored into memory for future retrieval.\n\n\n"
             + "Usage:\n"
-            + "  " + FLAG_ALPHA_PW    + "\t\tRandom password containing a mixture of\n (or..)\t\tcharacters and numbers.\n"
+            + "  " + FLAG_ALPHA_PW    + "\t\tRandom password containing a mixture of\n (or..)"
+            +                           "\t\tcharacters and numbers.\n"
             + "  " + FLAG_NUM_ONLY_PW + "\t\tRandom password containing numbers only.\n\n"
             + "  " + FLAG_PRINT_LAST  + "\t\tPrint the most recent password.\n"
             + "  " + FLAG_PRINT_ALL   + "\t\tPrint ALL of the timestamped passwords.\n"
             + "  " + FLAG_PRINT_FILE  + "\t\tRedirect ALL timestamped passwords to\n"
-            + "\t\ta textfile named \"SavedPasswords.txt\"\n\n\n"
+            +                           "\t\ta textfile named \"SavedPasswords.txt\"\n\n\n"
             + "Optional:\n"
             + "  " + FLAG_PW_SIZE + " <VALUE>\tCustomize the password's length. The default\n"
-            + "\t\tsize of " + DEFAULT_PW_SIZE + " numbers and/or characters will\n"
-            + "\t\totherwise be used.\n"
+            +                          "\t\tsize of " + DEFAULT_PW_SIZE
+            +                          " numbers and/or characters will\n"
+            +                          "\t\totherwise be used.\n"
             + "  " + FLAG_DELETE_ALL + "\t\tClear entire database\n\n"
             + "  " + FLAG_HELP + "\t\tPrint this help dialog.\n\n";
     } // End String printDirections()
 
     public static void main(String[] args)
     {
+        // Reject execution if no arguments were provided
         if (args.length < 1)
         {
             System.err.println("Improper command line argument(s) provided.\n\n"
             + printDirections());
             System.exit(1);
         }
+
         PrintWriter outWriter = null;
         PrintWriter printFile = null;
         try
         {
+            // Create password generating object. Constructor will parse args
             PasswordGen pwObj = new PasswordGen(args);
             if (pwObj.argsArrayList.contains(FLAG_PRINT_FILE))
             {
                 printFile = new PrintWriter(new FileWriter(PW_PRINT_FILE));
                 printFile.print(pwObj.printPasswords());
                 System.out.println("Passwords have successfully been printed on to:\n"
-                + "\t\"SavedPasswords.txt\"");
+                                + "\t\"SavedPasswords.txt\"");
                 printFile.close();
                 System.exit(0);
             }
@@ -78,10 +83,6 @@ public class RandomPassword
             }
             else if (pwObj.argsArrayList.contains(FLAG_ALPHA_PW) ||
                      pwObj.argsArrayList.contains(FLAG_NUM_ONLY_PW) ||
-                     pwObj.argsArrayList.contains(FLAG_PRINT_LAST) ||
-                     pwObj.argsArrayList.contains(FLAG_PRINT_ALL) ||
-                     pwObj.argsArrayList.contains(FLAG_PRINT_FILE) ||
-                     pwObj.argsArrayList.contains(FLAG_DELETE_ALL) ||
                      pwObj.argsArrayList.contains(FLAG_PW_SIZE))
             {
                 // Instantiate io objects
@@ -112,7 +113,7 @@ public class RandomPassword
         catch (InputMismatchException ex)
         {
             System.err.println("Cannot recognize input as an integer. Restart program.\n"
-            + "\tAdd \"-h\" as an argument for directions.");
+                            + "\tAdd \"-h\" as an argument for directions.");
         }
         catch (IOException ex)
         {

@@ -10,7 +10,7 @@ import java.util.Random;
  * <p>This is a helper class of the Random Password generator. This program was written
  * to help combat procrastination by providing a random password to temporarily change
  * the password of a social media account. This particular class allows the creation
- * of a password-generating object, providing methods for its configuation.</a>
+ * of a password-generating object, providing methods for its configuation.</p>
  *
  * @author Eric McDaniel
  * @version 1.3
@@ -18,8 +18,8 @@ import java.util.Random;
 public class PasswordGen
 {
     // Instance variables of the password generating object
-    private           boolean   onlyNumeric;
-    private               int        pwSize = -1;
+    private             boolean   onlyNumeric;
+    private                 int        pwSize = -1;
     protected ArrayList<String> argsArrayList;
 
     /**
@@ -30,23 +30,34 @@ public class PasswordGen
      */
     public PasswordGen(String[] cmdArgs)
     {
+        // Check to see if a database of PWs exists. Create one if none found. 
         try
         {
             FileReader existingFile = new FileReader(RandomPassword.PW_DATABASE_FILE);
         }
         catch (FileNotFoundException ex)
         {
+            PrintWriter filecreator = null;
             try
             {
-                PrintWriter filecreator = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
+                filecreator = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
                 filecreator.println();
             }
             catch (IOException ioex)
             {
-                System.err.println("Database could not be created. Possible permission error.");
+                System.err.println("Database could not be created. Possible permission error.\n"
+                                 + "Modify source code and rename the value in the constant String"
+                                 + "\"PW_DATABASE_FILE\". Otherwise, contact the developer.");
+                System.exit(1);
             }
-        }
-        // Transfer command-line arguments for easy ArrayList functions
+            finally
+            {
+                if (filecreator != null)
+                    filecreator.close();
+            }
+        } // End try-catch DB file exists
+
+        // Transfer command-line arguments for public ArrayList functions
         argsArrayList = new ArrayList<String>();
         for (int i = 0; i < cmdArgs.length; ++i)
             argsArrayList.add(cmdArgs[i]);
@@ -68,7 +79,7 @@ public class PasswordGen
         if (!parsableArguments())
         {
             System.err.println("\nCould not parse argument(s). Restart the program.\n"
-            + "\tAdd \"-h\" as an argument for directions.");
+                             + "\tAdd \"-h\" as an argument for directions.");
             System.exit(1);
         } // end !parsableArguments()
 
@@ -77,26 +88,27 @@ public class PasswordGen
         if (argsArrayList.contains(RandomPassword.FLAG_NUM_ONLY_PW))
             onlyNumeric = true;
         if (!argsArrayList.contains(RandomPassword.FLAG_PW_SIZE))
-            pwSize = RandomPassword.DEFAULT_PW_SIZE;
+            pwSize = RandomPassword.DEFAULT_PW_SIZE; // User didn't provide length. Default to 8
         else
         {
             int sizeIndex = argsArrayList.indexOf(RandomPassword.FLAG_PW_SIZE);
             try
             {
+                // size comes after the "-s" adding 1 to the indexOf size
                 pwSize = Integer.parseInt(argsArrayList.get(sizeIndex + 1));
                 if (pwSize < 1)
                     throw new IndexOutOfBoundsException();
             }
             catch (NumberFormatException ex)
             {
-                System.err.println("\n\nCould not properly parse size argument. Restart program.\n"
-                + "\tAdd \"-h\" as an argument for directions.");
+                System.err.println("\nCould not properly parse size argument. Restart program.\n"
+                                 + "\tAdd \"-h\" as an argument for directions.");
                 System.exit(1);
             }
             catch (IndexOutOfBoundsException ex)
             {
-                System.err.println("\n\nCould not properly parse size argument. Restart program.\n"
-                + "\tProvide \"-h\" as an argument for directions.");
+                System.err.println("\nCould not properly parse size argument. Restart program.\n"
+                                 + "\tProvide \"-h\" as an argument for directions.");
                 System.exit(1);
             } // End Try-Catch
         } // End list-contains Size
@@ -111,7 +123,7 @@ public class PasswordGen
      */
     private boolean parsableArguments()
     {
-        // Individual cases which should halt the program
+        // Individual cases which should halt the program. Somewhat arbitrary....
         if (argsArrayList.contains(RandomPassword.FLAG_ALPHA_PW) &&
             argsArrayList.contains(RandomPassword.FLAG_NUM_ONLY_PW))
             return false;
@@ -131,6 +143,7 @@ public class PasswordGen
             argsArrayList.contains(RandomPassword.FLAG_NUM_ONLY_PW)))
             return false;
 
+        // Final parsing, based on individual tokens
         for (String args : argsArrayList)
         {
             if (args.equals("-"))
@@ -149,12 +162,12 @@ public class PasswordGen
                     argsCopyList.remove(indexOfSize);
                     for (String copyArgs : argsCopyList)
                         if (copyArgs.charAt(0) != '-')
-                            return false;
+                            return false;       // multiple args without "-" was provided
                 }
                 catch (NumberFormatException ex)
                 {
                     System.err.println("\nCould not properly parse size argument. Restart program.\n"
-                    + "\tProvide \"-h\" as an argument for directions.");
+                                     + "\tProvide \"-h\" as an argument for directions.");
                     System.exit(1);
                 } // End Try-Catch
             } // End charAt(0) != -
@@ -176,10 +189,10 @@ public class PasswordGen
         // User opts to delete their password history. Make them enter a confirmation number
         int randConfirmation = new Random().nextInt(89999) + 1001;
 
-        System.out.print("\n\n\t || WARNING! ||\n\nYou have optioned to delete the entire database!\n"
-        + "Please enter the code provided to confirm your selection."
-        + "\n\n\tConfirmation Code: " + randConfirmation + "\n"
-        + "Enter the confirmation Code: ");
+        System.out.print("\n\t || WARNING! ||\n\nYou have optioned to delete the entire database!\n"
+                       + "Please enter the code provided to confirm your selection."
+                       + "\n\n\tConfirmation Code: " + randConfirmation + "\n"
+                       + "Enter the confirmation code: ");
         String confirmedInput = new Scanner(System.in).next();
 
         try
@@ -208,7 +221,7 @@ public class PasswordGen
         {
             try
             {
-                PrintWriter overwriteFile = new PrintWriter(new java.io.FileWriter(RandomPassword.PW_DATABASE_FILE));
+                PrintWriter overwriteFile = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
                 overwriteFile.println();
                 System.out.println("\nDatabase successfully cleared.");
                 System.exit(0);
@@ -216,12 +229,12 @@ public class PasswordGen
             catch (IOException ex)
             {
                 System.err.println("\nDatabase delete operation was unsuccessful.\n"
-                + "There possibly was no file to begin with.");
+                                 + "There possibly was no file to begin with.");
             } // End try-catch
         } // End if user prompts successfully
         else
             System.err.println("\nDatabase delete operation was unsuccessful.\n"
-            + "Incorrect confirmation code provided.");
+                             + "Incorrect confirmation code provided.");
         System.exit(1);
     } // End void deleteDatabase()
 
@@ -312,7 +325,8 @@ public class PasswordGen
         catch (FileNotFoundException ex)
         {
             System.err.println("Error loading password database.\nThis likely was the result "
-            + "of a file permission error.\n\n\tGenerate a new password to troubleshoot.\n");
+                             + "of a file permission error.\n"
+                             + "\tGenerate a new password to troubleshoot.\n");
             System.exit(1);
         }
         finally
@@ -325,19 +339,21 @@ public class PasswordGen
 
     /** 
      * <p>The real logic of the program. Uses the ASCII values associated with each
-     * character to generate the random characters.</p>
+     * character to generate the random characters. Refer to the ASCII table on 
+     * <a href="http://ee.hawaii.edu/~tep/EE160/Book/chap4/subsection2.1.1.1.html">this
+     * website for details.</a></p>
      *
      * @return number The ASCII number that is to be used as the ASCII char.
      */
     private static int getRandomChar()
     {
-        boolean notValid = true;
+        boolean valid = false;
         int number = -1;
-        while (notValid)
+        while (!valid)
         {
             number = new Random().nextInt(74) + 48;
-            if (!(number >= 58 && number <= 65) && !(number >= 91 && number <= 96))
-                notValid = false;
+            if (!(number > 57 && number < 65) && !(number > 90 && number < 97))
+                valid = true;
         }
         return number;
     } // End int getRandomChar()
@@ -358,7 +374,7 @@ public class PasswordGen
         {
             for (int i = 0; i < getPWSize(); ++i)
             {
-                int number = new Random().nextInt(10);
+                int number = new Random().nextInt(10); // Generates 0 - 9 for each digit
                 completedPassword += number;
             }
             return completedPassword;
