@@ -6,6 +6,15 @@ import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
+/**
+ * <p>This is a helper class of the Random Password generator. This program was written
+ * to help combat procrastination by providing a random password to temporarily change
+ * the password of a social media account. This particular class allows the creation
+ * of a password-generating object, providing methods for its configuation.</a>
+ *
+ * @author Eric McDaniel
+ * @version 1.3
+ */
 public class PasswordGen
 {
     // Instance variables of the password generating object
