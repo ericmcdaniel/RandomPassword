@@ -293,13 +293,27 @@ public class PasswordGen
             if (argsArrayList.contains(RandomPassword.FLAG_PRINT_ALL) ||
                 argsArrayList.contains(RandomPassword.FLAG_PRINT_FILE))
             {
-                while (fileReadingObj.hasNext())
+                while (fileReadingObj.hasNextLine())
                 {
-                    fullDatabase += "[Password previously generated on " + fileReadingObj.next()
-                    + "/" + fileReadingObj.next() + "/" + fileReadingObj.next() + ", at "
-                    + fileReadingObj.next() + ":" + fileReadingObj.next() + ":"
-                    + fileReadingObj.next() + " " + fileReadingObj.next() + "]\n\t"
-                    + fileReadingObj.next() + "\n\n";
+                    String databaseEntry = fileReadingObj.nextLine();
+                    Scanner lineTokenReader = new Scanner(databaseEntry);
+
+                    if (!fileReadingObj.hasNextLine())
+                        fullDatabase += ".--------------------------------------------------"
+                                      + "-------------.\n| [Most recent password, generated "
+                                      + "on " + lineTokenReader.next() + "/"
+                                      + lineTokenReader.next() + "/" + lineTokenReader.next()
+                                      + ", at " + lineTokenReader.next() + ":"
+                                      +lineTokenReader.next() + ":" + lineTokenReader.next() 
+                                      + " " + lineTokenReader.next() + "]\n|\t" 
+                                      + lineTokenReader.next() + " \n.------------------"
+                                      + "---------------------------------------------.\n";
+                    else
+                        fullDatabase += "[Password previously generated on " + lineTokenReader.next()
+                                      + "/" + lineTokenReader.next() + "/" + lineTokenReader.next() 
+                                      + ", at " + lineTokenReader.next() + ":" + lineTokenReader.next() 
+                                      + ":" + lineTokenReader.next() + " " + lineTokenReader.next() 
+                                      + "]\n\t" + lineTokenReader.next() + "\n\n";
                 }
                 return fullDatabase;
             } // End if contains -a
@@ -314,10 +328,10 @@ public class PasswordGen
                 while (token.hasNext())
                 {
                     fullDatabase += "[Last password generated on " + token.next()
-                    + "/" + token.next() + "/" + token.next() + ", at "
-                    + token.next() + ":" + token.next() + ":"
-                    + token.next() + " " + token.next() + "]\n\t"
-                    + token.next() + "\n\n";
+                                  + "/" + token.next() + "/" + token.next() + ", at "
+                                  + token.next() + ":" + token.next() + ":"
+                                  + token.next() + " " + token.next() + "]\n\t"
+                                  + token.next() + "\n\n";
                 }
                 return fullDatabase;
             } // End if contains -p
