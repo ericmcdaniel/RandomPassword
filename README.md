@@ -1,6 +1,6 @@
 # Random Password Generator
 ## A configurable CLI password generator to help users defeat procrastination
-![Sample image of the the program generating a password](https://i.imgur.com/Dl7AFHt.png)
+![Sample image of the the program generating a password](https://i.imgur.com/XJQ9au3.png?1)
 
 ---
 
