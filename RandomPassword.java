@@ -46,8 +46,8 @@ public class RandomPassword
             +                          "\t\tsize of " + DEFAULT_PW_SIZE
             +                          " numbers and/or characters will\n"
             +                          "\t\totherwise be used.\n"
-            + "  " + FLAG_DELETE_ALL + "\t\tClear entire database\n\n"
-            + "  " + FLAG_HELP + "\t\tPrint this help dialog.\n\n";
+            + "  " + FLAG_DELETE_ALL + "\t\tClear entire database.\n"
+            + "  " + FLAG_HELP + "\t\tPrint this help dialog.\n";
     } // End String printDirections()
 
     public static void main(String[] args)
