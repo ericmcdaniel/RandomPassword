@@ -30,7 +30,7 @@ public class PasswordGen
      */
     public PasswordGen(String[] cmdArgs)
     {
-        // Check to see if a database of PWs exists. Create one if none found. 
+        // Check to see if a database of PWs exists. Create one if none found.
         try
         {
             FileReader existingFile = new FileReader(RandomPassword.PW_DATABASE_FILE);
@@ -41,7 +41,6 @@ public class PasswordGen
             try
             {
                 filecreator = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
-                filecreator.println();
             }
             catch (IOException ioex)
             {
@@ -239,7 +238,7 @@ public class PasswordGen
     } // End void deleteDatabase()
 
     /**
-     * 
+     *
      * <p>Changes the object if password should contain characters or numbers only.</p>
      *
      * @param value The new boolean value
@@ -304,15 +303,15 @@ public class PasswordGen
                                       + "on " + lineTokenReader.next() + "/"
                                       + lineTokenReader.next() + "/" + lineTokenReader.next()
                                       + ", at " + lineTokenReader.next() + ":"
-                                      +lineTokenReader.next() + ":" + lineTokenReader.next() 
-                                      + " " + lineTokenReader.next() + "]\n|\t" 
+                                      +lineTokenReader.next() + ":" + lineTokenReader.next()
+                                      + " " + lineTokenReader.next() + "]\n|\t"
                                       + lineTokenReader.next() + " \n.------------------"
                                       + "---------------------------------------------.\n";
                     else
                         fullDatabase += "[Password previously generated on " + lineTokenReader.next()
-                                      + "/" + lineTokenReader.next() + "/" + lineTokenReader.next() 
-                                      + ", at " + lineTokenReader.next() + ":" + lineTokenReader.next() 
-                                      + ":" + lineTokenReader.next() + " " + lineTokenReader.next() 
+                                      + "/" + lineTokenReader.next() + "/" + lineTokenReader.next()
+                                      + ", at " + lineTokenReader.next() + ":" + lineTokenReader.next()
+                                      + ":" + lineTokenReader.next() + " " + lineTokenReader.next()
                                       + "]\n\t" + lineTokenReader.next() + "\n\n";
                 }
                 return fullDatabase;
@@ -351,9 +350,9 @@ public class PasswordGen
         return null; // Should never encounter
     } // End String printPasswords()
 
-    /** 
+    /**
      * <p>The real logic of the program. Uses the ASCII values associated with each
-     * character to generate the random characters. Refer to the ASCII table on 
+     * character to generate the random characters. Refer to the ASCII table on
      * <a href="http://ee.hawaii.edu/~tep/EE160/Book/chap4/subsection2.1.1.1.html">this
      * website for details.</a></p>
      *
