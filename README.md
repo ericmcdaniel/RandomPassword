@@ -31,13 +31,13 @@ This program was primarily intended for Linux users, and was not tested in a Win
 + For those unfamiliar with GitHub, click the green "Clone or download" button, download the repository as a ZIP, and extract it on your local machine. Cloning/ Forking/ or downloading via SSH will work just as fine too for users with previous GitHub experience.
 + Compile the source code using the `javac` command. You must be in the root directory containing the `RandomPassword.java` file.
 ```
-javac RandomPassword.java [ARGUMENTS]
+javac RandomPassword.java
 ```
 
 ### Run the Application
 + Run the program using the `java` keyword, followed by the name of the program (without the <i>.java</i> suffix).
 ```
-java RandomPassword
+java RandomPassword [ARGUMENTS]
 ```
 To get the most out of this utility, set an alias in your shell's <i>rc</i> file to have java reference the path of the program. This also eliminates typing the keyword `java`. For example, you can append:
 ```
