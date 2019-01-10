@@ -39,6 +39,11 @@ javac RandomPassword.java [ARGUMENTS]
 ```
 java RandomPassword
 ```
+To get the most out of this utility, set an alias in your shell's <i>rc</i> file to have java reference the path of the program. This also eliminates typing the keyword `java`. For example, you can append:
+```
+alias RandomPassword='java -cp ~/<path>/<to>/<directory>/RandomPassword RandomPassword'
+```
+This would require you to only need to type `RandomPassword` into your shell. You can even shorten it to `RP` or whatever you choose.
 
 By default, the help menu will appear if no arguments were provided.
 
