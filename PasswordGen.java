@@ -21,6 +21,7 @@ public class PasswordGen
     private             boolean   onlyNumeric;
     private                 int        pwSize = -1;
     protected ArrayList<String> argsArrayList;
+    private  java.nio.file.Path  databasePath;
 
     /**
      * <p>Constructor for the PasswordGen class. Creates a new password generating object
@@ -28,24 +29,26 @@ public class PasswordGen
      *
      * @param cmdArgs The arguments provided by the user at execution
      */
-    public PasswordGen(String[] cmdArgs)
+    public PasswordGen(String[] cmdArgs, java.nio.file.Path inPath)
     {
+        databasePath = inPath;
+        
         // Check to see if a database of PWs exists. Create one if none found.
         try
         {
-            FileReader existingFile = new FileReader(RandomPassword.PW_DATABASE_FILE);
+            FileReader existingFile = new FileReader(databasePath.toString());
         }
         catch (FileNotFoundException ex)
         {
             PrintWriter filecreator = null;
             try
             {
-                filecreator = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
+                filecreator = new PrintWriter(new FileWriter(databasePath.toString()));
             }
             catch (IOException ioex)
             {
                 System.err.println("Database could not be created. Possible permission error.\n"
-                                 + "Modify source code and rename the value in the constant String"
+                                 + "Modify source code and rename the value in the constant String "
                                  + "\"PW_DATABASE_FILE\". Otherwise, contact the developer.");
                 System.exit(1);
             }
@@ -220,7 +223,7 @@ public class PasswordGen
         {
             try
             {
-                PrintWriter overwriteFile = new PrintWriter(new FileWriter(RandomPassword.PW_DATABASE_FILE));
+                PrintWriter overwriteFile = new PrintWriter(new FileWriter(databasePath.toString()));
                 overwriteFile.println();
                 System.out.println("\nDatabase successfully cleared.");
                 System.exit(0);
@@ -281,7 +284,7 @@ public class PasswordGen
         Scanner fileReadingObj = null;
         try
         {
-            fileReadingObj = new Scanner(new FileReader(RandomPassword.PW_DATABASE_FILE));
+            fileReadingObj = new Scanner(new FileReader(databasePath.toString()));
             if (!fileReadingObj.hasNext())
             {
                 System.err.println("No password records were found in the database.");

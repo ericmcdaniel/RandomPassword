@@ -24,6 +24,7 @@ public class RandomPassword
     public static final    int  DEFAULT_PW_SIZE  = 8;
     public static final String PW_DATABASE_FILE  = ".pwcollection.txt";
     public static final String    PW_PRINT_FILE  = "SavedPasswords.txt";
+    private static java.nio.file.Path   databasePath;
 
     public static String printDirections()
     {
@@ -52,6 +53,10 @@ public class RandomPassword
 
     public static void main(String[] args)
     {
+        // Establish an os path for the file. File not created yet. 
+        java.nio.file.Path databasePath = java.nio.file.Paths.get(System.getProperty("user.home")
+                                        + java.io.File.separator + PW_DATABASE_FILE);
+        
         // Reject execution if no arguments were provided
         if (args.length < 1)
         {
@@ -65,7 +70,7 @@ public class RandomPassword
         try
         {
             // Create password generating object. Constructor will parse args
-            PasswordGen pwObj = new PasswordGen(args);
+            PasswordGen pwObj = new PasswordGen(args, databasePath);
             if (pwObj.argsArrayList.contains(FLAG_PRINT_FILE))
             {
                 printFile = new PrintWriter(new FileWriter(PW_PRINT_FILE));
@@ -86,7 +91,7 @@ public class RandomPassword
                      pwObj.argsArrayList.contains(FLAG_PW_SIZE))
             {
                 // Instantiate io objects
-                outWriter = new PrintWriter(new FileWriter(PW_DATABASE_FILE, true));
+                outWriter = new PrintWriter(new FileWriter(databasePath.toString(), true));
                 String completedPassword = pwObj.generatePW();
 
                 // Use Date and DateFormat objects to make formatted timestamps
