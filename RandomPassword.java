@@ -53,15 +53,15 @@ public class RandomPassword
 
     public static void main(String[] args)
     {
-        // Establish an os path for the file. File not created yet. 
+        // Establish an os path for the file. File not created yet.
         java.nio.file.Path databasePath = java.nio.file.Paths.get(System.getProperty("user.home")
                                         + java.io.File.separator + PW_DATABASE_FILE);
-        
+
         // Reject execution if no arguments were provided
         if (args.length < 1)
         {
             System.err.println("Improper command line argument(s) provided.\n\n"
-            + printDirections());
+                                + printDirections());
             System.exit(1);
         }
 
@@ -86,7 +86,7 @@ public class RandomPassword
                 System.out.print(pwObj.printPasswords());
                 System.exit(0);
             }
-            else if (pwObj.argsArrayList.contains(FLAG_ALPHA_PW) ||
+            else if (pwObj.argsArrayList.contains(FLAG_ALPHA_PW)    ||
                      pwObj.argsArrayList.contains(FLAG_NUM_ONLY_PW) ||
                      pwObj.argsArrayList.contains(FLAG_PW_SIZE))
             {
