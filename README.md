@@ -27,7 +27,7 @@ This program was primarily intended for Linux users, and was not tested in a Win
 ---
 
 ### Get the Application
-++ Being a Java application, users will need to install Oracle's Java Development Kit (JDK). [The JDK can be downloaded here.](http://www.oracle.com/technetwork/java/javase/downloads/index.html) The `*.class` files are not provided, and the `javac` tool is not available if you only have the JRE.
++ Being a Java application, users will need to install Oracle's Java Development Kit (JDK). [The JDK can be downloaded here.](http://www.oracle.com/technetwork/java/javase/downloads/index.html) The `*.class` files are not provided, and the `javac` tool is not available if you only have the JRE.
 + For those unfamiliar with GitHub, click the green "Clone or download" button, download the repository as a ZIP, and extract it on your local machine. Cloning/ Forking/ or downloading via SSH will work just as fine too for users with previous GitHub experience.
 + Compile the source code using the `javac` command. You must be in the root directory containing the `RandomPassword.java` file.
 ```
